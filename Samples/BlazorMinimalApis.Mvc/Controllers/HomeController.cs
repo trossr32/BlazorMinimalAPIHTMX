@@ -12,7 +12,7 @@ public class HomeController : XController
 
 	public IResult RandomNumber()
 	{
-		Random rnd = new Random();
+		Random rnd = new();
 		var num = rnd.Next();
 		return View<_RandomNumber>(new { Num = num });
 	}

@@ -1,6 +1,5 @@
 ﻿using BlazorMinimalApis.Pages.Data;
 using BlazorMinimalApis.Lib.Routing;
-using BlazorMinimalApis.Pages.Lib;
 
 namespace BlazorMinimalApis.Pages.Pages.Api.Contacts;
 

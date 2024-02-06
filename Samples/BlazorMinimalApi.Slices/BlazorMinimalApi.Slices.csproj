@@ -8,7 +8,26 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Riok.Mapperly" Version="3.2.0" />
+    <Compile Remove="Applications\Contacts\Validators\**" />
+    <Compile Remove="Applications\Home\Mappers\**" />
+    <Compile Remove="Applications\Home\Models\**" />
+    <Compile Remove="Applications\Home\Validators\**" />
+    <Content Remove="Applications\Contacts\Validators\**" />
+    <Content Remove="Applications\Home\Mappers\**" />
+    <Content Remove="Applications\Home\Models\**" />
+    <Content Remove="Applications\Home\Validators\**" />
+    <EmbeddedResource Remove="Applications\Contacts\Validators\**" />
+    <EmbeddedResource Remove="Applications\Home\Mappers\**" />
+    <EmbeddedResource Remove="Applications\Home\Models\**" />
+    <EmbeddedResource Remove="Applications\Home\Validators\**" />
+    <None Remove="Applications\Contacts\Validators\**" />
+    <None Remove="Applications\Home\Mappers\**" />
+    <None Remove="Applications\Home\Models\**" />
+    <None Remove="Applications\Home\Validators\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Riok.Mapperly" Version="3.3.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,13 +47,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\BlazorMinimalApis\BlazorMinimalApis.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Applications\Contacts\Validators\" />
-    <Folder Include="Applications\Home\Mappers\" />
-    <Folder Include="Applications\Home\Models\" />
-    <Folder Include="Applications\Home\Validators\" />
   </ItemGroup>
 
 </Project>

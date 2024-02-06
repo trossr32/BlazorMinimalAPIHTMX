@@ -1,6 +1,5 @@
 ﻿using BlazorMinimalApis.Slices.Data;
 using BlazorMinimalApis.Lib.Routing;
-using BlazorMinimalApis.Slices.Lib;
 
 namespace BlazorMinimalApis.Slices.Applications.Contacts.Handlers;
 

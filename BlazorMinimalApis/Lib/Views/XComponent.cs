@@ -43,13 +43,15 @@ public class XComponent<TModel> : IComponent
 
     public bool HasError<TValue>(Expression<Func<TValue>>? For)
     {
-        var _fieldIdentifier = FieldIdentifier.Create(For);
+        var fieldIdentifier = FieldIdentifier.Create(For);
 
-        if (!HasErrors) return false;
+        if (!HasErrors) 
+            return false;
 
-        var error = Errors.Where(x => x.MemberName == _fieldIdentifier.FieldName).FirstOrDefault();
+        var error = Errors?.FirstOrDefault(x => x.MemberName == fieldIdentifier.FieldName);
 
-        if (error == null) return false;
+        if (error == null) 
+            return false;
 
         Message = error.Message;
         return true;
@@ -57,15 +59,16 @@ public class XComponent<TModel> : IComponent
 
     public string ValidationError<TValue>(Expression<Func<TValue>>? For)
     {
-        if (!HasErrors) return "";
+        if (!HasErrors) 
+            return "";
 
-        var _fieldIdentifier = FieldIdentifier.Create(For);
+        var fieldIdentifier = FieldIdentifier.Create(For);
 
-        var error = Errors.Where(x => x.MemberName == _fieldIdentifier.FieldName).FirstOrDefault();
+        var error = Errors?.FirstOrDefault(x => x.MemberName == fieldIdentifier.FieldName);
 
-        if (error == null) return "";
-
-        return error.Message;
+        return error == null 
+            ? "" 
+            : error.Message;
     }
 
     public SessionManager Session()
@@ -92,9 +95,7 @@ public class XComponent<TModel> : IComponent
         // renderer. That's the only use case we have right now. If there was ever a need,
         // a component could hold a collection of render handles.
         if (_renderHandle.IsInitialized)
-        {
             throw new InvalidOperationException($"The render handle is already set. Cannot initialize a {nameof(ComponentBase)} more than once.");
-        }
 
         _renderHandle = renderHandle;
     }
@@ -141,23 +142,21 @@ public class XComponent<TModel> : IComponent
     protected void StateHasChanged()
     {
         if (_hasPendingQueuedRender)
-        {
             return;
-        }
 
-        if (_hasNeverRendered || ShouldRender() || _renderHandle.IsRenderingOnMetadataUpdate)
+        if (!_hasNeverRendered && !ShouldRender() && !_renderHandle.IsRenderingOnMetadataUpdate) 
+            return;
+
+        _hasPendingQueuedRender = true;
+
+        try
         {
-            _hasPendingQueuedRender = true;
-
-            try
-            {
-                _renderHandle.Render(_renderFragment);
-            }
-            catch
-            {
-                _hasPendingQueuedRender = false;
-                throw;
-            }
+            _renderHandle.Render(_renderFragment);
+        }
+        catch
+        {
+            _hasPendingQueuedRender = false;
+            throw;
         }
     }
 
@@ -217,16 +216,13 @@ public class XComponent<TModel> : IComponent
     public virtual Task SetParametersAsync(ParameterView parameters)
     {
         parameters.SetParameterProperties(this);
-        if (!_initialized)
-        {
-            _initialized = true;
 
-            return RunInitAndSetParametersAsync();
-        }
-        else
-        {
+        if (_initialized)
             return CallOnParametersSetAsync();
-        }
+
+        _initialized = true;
+
+        return RunInitAndSetParametersAsync();
     }
 
     private async Task RunInitAndSetParametersAsync()
@@ -254,9 +250,7 @@ public class XComponent<TModel> : IComponent
                 // CancellationToken.ThrowIfCancellationRequested()) or a TaskCanceledException (produced as a consequence of awaiting Task.FromCanceled).
                 // It's much easier to check the state of the Task (i.e. Task.IsCanceled) rather than catch two distinct exceptions.
                 if (!task.IsCanceled)
-                {
                     throw;
-                }
             }
 
             // Don't call StateHasChanged here. CallOnParametersSetAsync should handle that for us.
@@ -268,10 +262,10 @@ public class XComponent<TModel> : IComponent
     private Task CallOnParametersSetAsync()
     {
         Errors = PageState.Errors;
-        if (Errors != null && Errors.Count > 0)
-        {
+
+        if (Errors is { Count: > 0 })
             HasErrors = true;
-        }
+        
         SessionManager = new SessionManager(HttpContextAccessor);
 
         OnParametersSet();
@@ -287,9 +281,9 @@ public class XComponent<TModel> : IComponent
         // the synchronous part of OnParametersSetAsync has run.
         StateHasChanged();
 
-        return shouldAwaitTask ?
-            CallStateHasChangedOnAsyncCompletion(task) :
-            Task.CompletedTask;
+        return shouldAwaitTask 
+            ? CallStateHasChangedOnAsyncCompletion(task) 
+            : Task.CompletedTask;
     }
 
     private async Task CallStateHasChangedOnAsyncCompletion(Task task)
@@ -302,9 +296,7 @@ public class XComponent<TModel> : IComponent
         {
             // Ignore exceptions from task cancellations, but don't bother issuing a state change.
             if (task.IsCanceled)
-            {
                 return;
-            }
 
             throw;
         }
@@ -347,15 +339,18 @@ public class XComponent : IComponent
 
     public bool HasError<TValue>(Expression<Func<TValue>>? For)
     {
-        var _fieldIdentifier = FieldIdentifier.Create(For);
+        var fieldIdentifier = FieldIdentifier.Create(For);
 
-        if (!HasErrors) return false;
+        if (!HasErrors) 
+            return false;
 
-        var error = Errors.Where(x => x.MemberName == _fieldIdentifier.FieldName).FirstOrDefault();
+        var error = Errors?.FirstOrDefault(x => x.MemberName == fieldIdentifier.FieldName);
 
-        if (error == null) return false;
+        if (error == null) 
+            return false;
 
         Message = error.Message;
+
         return true;
 	}
 
@@ -363,19 +358,16 @@ public class XComponent : IComponent
 	{
 		if (!HasErrors) return "";
 
-		var _fieldIdentifier = FieldIdentifier.Create(For);
+		var fieldIdentifier = FieldIdentifier.Create(For);
 
-		var error = Errors.Where(x => x.MemberName == _fieldIdentifier.FieldName).FirstOrDefault();
+		var error = Errors?.FirstOrDefault(x => x.MemberName == fieldIdentifier.FieldName);
 
-		if (error == null) return "";
-
-		return error.Message;
-	}
-
-	public SessionManager Session()
-    {
-        return SessionManager;
+		return error == null 
+            ? "" 
+            : error.Message;
     }
+
+	public SessionManager Session() => SessionManager;
 
     /// <summary>
     /// Renders the component to the supplied <see cref="RenderTreeBuilder"/>.
@@ -396,9 +388,7 @@ public class XComponent : IComponent
         // renderer. That's the only use case we have right now. If there was ever a need,
         // a component could hold a collection of render handles.
         if (_renderHandle.IsInitialized)
-        {
             throw new InvalidOperationException($"The render handle is already set. Cannot initialize a {nameof(ComponentBase)} more than once.");
-        }
 
         _renderHandle = renderHandle;
     }
@@ -445,23 +435,21 @@ public class XComponent : IComponent
     protected void StateHasChanged()
     {
         if (_hasPendingQueuedRender)
-        {
             return;
-        }
 
-        if (_hasNeverRendered || ShouldRender() || _renderHandle.IsRenderingOnMetadataUpdate)
+        if (!_hasNeverRendered && !ShouldRender() && !_renderHandle.IsRenderingOnMetadataUpdate) 
+            return;
+
+        _hasPendingQueuedRender = true;
+
+        try
         {
-            _hasPendingQueuedRender = true;
-
-            try
-            {
-                _renderHandle.Render(_renderFragment);
-            }
-            catch
-            {
-                _hasPendingQueuedRender = false;
-                throw;
-            }
+            _renderHandle.Render(_renderFragment);
+        }
+        catch
+        {
+            _hasPendingQueuedRender = false;
+            throw;
         }
     }
 
@@ -521,16 +509,13 @@ public class XComponent : IComponent
     public virtual Task SetParametersAsync(ParameterView parameters)
     {
         parameters.SetParameterProperties(this);
-        if (!_initialized)
-        {
-            _initialized = true;
 
-            return RunInitAndSetParametersAsync();
-        }
-        else
-        {
+        if (_initialized)
             return CallOnParametersSetAsync();
-        }
+
+        _initialized = true;
+
+        return RunInitAndSetParametersAsync();
     }
 
     private async Task RunInitAndSetParametersAsync()
@@ -572,10 +557,10 @@ public class XComponent : IComponent
     private Task CallOnParametersSetAsync()
     {
         Errors = PageState.Errors;
-        if (Errors != null && Errors.Count > 0)
-        {
+
+        if (Errors is { Count: > 0 })
             HasErrors = true;
-        }
+
         SessionManager = new SessionManager(HttpContextAccessor);
 
         OnParametersSet();
@@ -591,9 +576,9 @@ public class XComponent : IComponent
         // the synchronous part of OnParametersSetAsync has run.
         StateHasChanged();
 
-        return shouldAwaitTask ?
-            CallStateHasChangedOnAsyncCompletion(task) :
-            Task.CompletedTask;
+        return shouldAwaitTask 
+            ? CallStateHasChangedOnAsyncCompletion(task) 
+            : Task.CompletedTask;
     }
 
     private async Task CallStateHasChangedOnAsyncCompletion(Task task)
@@ -606,9 +591,7 @@ public class XComponent : IComponent
         {
             // Ignore exceptions from task cancellations, but don't bother issuing a state change.
             if (task.IsCanceled)
-            {
                 return;
-            }
 
             throw;
         }

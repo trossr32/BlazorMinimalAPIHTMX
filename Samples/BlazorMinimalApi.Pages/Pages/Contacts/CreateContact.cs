@@ -2,7 +2,6 @@
 using BlazorMinimalApis.Pages.Data;
 using BlazorMinimalApis.Lib.Routing;
 using BlazorMinimalApis.Lib.Session;
-using BlazorMinimalApis.Pages.Lib;
 using Microsoft.AspNetCore.Mvc;
 using Riok.Mapperly.Abstractions;
 
@@ -18,18 +17,19 @@ public class CreateContact : XPage
 		return Page<_CreateContact>();
 	}
 
-	public IResult Post([FromForm] CreateContactForm form, SessionManager Session)
+	public IResult Post([FromForm] CreateContactForm form, SessionManager session)
 	{
 		if (Validate(form).HasErrors)
 		{
 			Form = form;
 			return Page<_CreateContact>();
 		}
+
 		var newContact = new CreateContactMapper().FormToContact(form);
-		newContact.Id = Database.Contacts.Count() + 1;
+		newContact.Id = Database.Contacts.Count + 1;
 		Database.Contacts.Add(newContact);
 
-		Session.SetFlash("success", "Contact successfully added.");
+		session.SetFlash("success", "Contact successfully added.");
 		return Redirect("/contacts/create");
     }
 }

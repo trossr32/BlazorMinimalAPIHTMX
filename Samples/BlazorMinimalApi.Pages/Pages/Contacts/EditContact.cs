@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using BlazorMinimalApis.Pages.Data;
 using BlazorMinimalApis.Lib.Routing;
-using BlazorMinimalApis.Pages.Lib;
 using Microsoft.AspNetCore.Mvc;
 using Riok.Mapperly.Abstractions;
 
@@ -14,7 +13,7 @@ public class EditContact : XPage
 
 	public IResult Get(int id)
 	{
-		var record = Database.Contacts.Where(x => x.Id == id).First();
+		var record = Database.Contacts.First(x => x.Id == id);
 		Form = new EditContactMapper().ContactToForm(record);
 		Id = id;
 		return Page<_EditContact>();

@@ -1,7 +1,6 @@
 ﻿using BlazorMinimalApis.Pages.Lib;
 using BlazorMinimalApis.Pages.Pages.Contacts;
 using BlazorMinimalApis.Pages.Pages.Home;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace BlazorMinimalApis.Pages.Routes;
 

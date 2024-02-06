@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
-
-namespace BlazorMinimalApis.Pages.Lib;
+﻿namespace BlazorMinimalApis.Pages.Lib;
 
 public interface IRouteDefinition
 {

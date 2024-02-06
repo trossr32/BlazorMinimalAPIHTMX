@@ -2,7 +2,6 @@
 using BlazorMinimalApis.Lib.Session;
 using BlazorMinimalApis.Mvc.Data;
 using BlazorMinimalApis.Mvc.Views.Contacts;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Riok.Mapperly.Abstractions;
 using System.ComponentModel.DataAnnotations;
@@ -17,10 +16,10 @@ public class ContactController : XController
 		return View<List>(parameters);
 	}
 
-	public IResult Search([FromQuery] string ContactSearch)
+	public IResult Search([FromQuery] string contactSearch)
 	{
 		var contacts = Database.Contacts
-			.Where(x => x.Name.Contains(ContactSearch, StringComparison.OrdinalIgnoreCase))
+			.Where(x => x.Name.Contains(contactSearch, StringComparison.OrdinalIgnoreCase))
 			.ToList();
 		var model = new { Contacts = contacts };
 		return View<_ContactsTable>(model);
@@ -32,7 +31,7 @@ public class ContactController : XController
 		return View<Create>(model);
 	}
 
-	public IResult Store([FromForm] CreateContactForm form, SessionManager Session)
+	public IResult Store([FromForm] CreateContactForm form, SessionManager session)
 	{
 		if (Validate(form).HasErrors)
 		{
@@ -43,14 +42,14 @@ public class ContactController : XController
 		newContact.Id = Database.Contacts.Count() + 1;
 		Database.Contacts.Add(newContact);
 
-		Session.SetFlash("success", "Contact successfully added.");
+		session.SetFlash("success", "Contact successfully added.");
 
 		return Redirect("/contacts/create");
 	}
 
 	public IResult Edit(int id)
 	{
-		var record = Database.Contacts.Where(x => x.Id == id).First();
+		var record = Database.Contacts.First(x => x.Id == id);
 		var form = new EditContactMapper().ContactToForm(record);
 		var model = new { Form = form };
 		return View<Edit>(model);

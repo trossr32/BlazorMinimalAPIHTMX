@@ -1,7 +1,4 @@
-﻿using BlazorMinimalApis.Lib.Routing;
-using Microsoft.AspNetCore.Builder;
-
-namespace BlazorMinimalApis.Pages.Lib;
+﻿namespace BlazorMinimalApis.Pages.Lib;
 
 public static class RegisterRoutesExtension
 {

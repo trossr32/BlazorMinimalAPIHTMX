@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
-
-namespace BlazorMinimalApis.Mvc.Lib;
+﻿namespace BlazorMinimalApis.Mvc.Lib;
 
 public static class RegisterRoutesExtension
 {
@@ -9,7 +7,7 @@ public static class RegisterRoutesExtension
 		var endpointDefinitions = typeof(Program).Assembly
 			.GetTypes()
 			.Where(t => t.IsAssignableTo(typeof(IRouteDefinition))
-			            && !t.IsAbstract && !t.IsInterface)
+                        && t is { IsAbstract: false, IsInterface: false })
 			.Select(Activator.CreateInstance)
 			.Cast<IRouteDefinition>();
 

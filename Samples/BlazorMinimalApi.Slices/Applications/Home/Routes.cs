@@ -10,6 +10,5 @@ public class Routes : IRouteDefinition
 		app.MapGet("/", new ShowHome().Show);
 
 		app.MapGet("/random-number", new ShowHome().RandomNumber);
-
 	}
 }

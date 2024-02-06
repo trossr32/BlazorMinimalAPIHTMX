@@ -1,9 +1,5 @@
 ﻿using BlazorMinimalApis.Mvc.Controllers;
 using BlazorMinimalApis.Mvc.Lib;
-using BlazorMinimalApis.Mvc.Views.Contacts;
-using BlazorMinimalApis.Mvc.Views.Home;
-using System.Collections.Generic;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace BlazorMinimalApis.Mvc.Routes;
 
